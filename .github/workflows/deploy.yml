@@ -7,6 +7,23 @@ on:
       - main
 
 jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+    
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+  
+      - name: Run Integration Tests
+        run: ./gradlew clean test
+        working-directory: ./backend
+
   deploy:
     runs-on: ubuntu-latest
     container: ghcr.io/railwayapp/cli:latest
@@ -18,17 +35,6 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
     
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-            distribution: 'temurin'
-            java-version: '17'
-            cache: 'gradle'
-  
-      - name: Run Integration Tests
-        run: ./gradlew clean test
-        working-directory: ./backend
-
       # Set environment based on the branch
       - name: Set Environment Variables
         id: set_env
@@ -50,7 +56,7 @@ jobs:
 
       # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
-        run: railway up --service=${{ env.SVC_ID }} --environment= ${{ env.RAILWAY_ENV_ID }}
+        run: railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
 
           # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
