@@ -57,6 +57,7 @@ jobs:
       # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
         run: RAILWAY_DEBUG=1 railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
+        working-directory: ./backend
 
           # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
@@ -65,6 +66,7 @@ jobs:
           railway domain || true
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        working-directory: ./backend
 
 
         #   backend-account-token="a0f7b020-1bac-4962-b053-ec41f64d43f0"
