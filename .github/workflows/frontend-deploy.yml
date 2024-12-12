@@ -1,4 +1,4 @@
-name: Deploy Backend to Railway
+name: Deploy to Railway
 
 on:
   push:
@@ -6,32 +6,34 @@ on:
       - staging
       - main
     paths:
-      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
-    
-      - name: Setup Java
-        uses: actions/setup-java@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
-  
-      - name: Run Integration Tests
-        run: ./gradlew clean test
-        working-directory: ./backend
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build project
+        working-directory: ./frontend
+        run: npm run build
 
   deploy:
-    needs: [build-test]
+    needs: [build]
     runs-on: ubuntu-latest
     container: ghcr.io/railwayapp/cli:latest
     env:
-      SVC_ID: backend
+      SVC_ID: frontend
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
     steps:
@@ -49,11 +51,11 @@ jobs:
           fi
 
       - name: Deploy to Railway
+        working-directory: ./frontend
         run: RAILWAY_DEBUG=1 railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
-        working-directory: ./backend
 
-      # Deploy to the appropriate environment in the same project
       - name: Activate Domain
+        working-directory: ./frontend
         run: |
           unset RAILWAY_TOKEN
           railway link -p $RAILWAY_PROJECT_NAME -e $RAILWAY_ENV_ID -s ${{ env.SVC_ID }}
@@ -62,8 +64,3 @@ jobs:
           RAILWAY_ENV_ID: ${{ env.RAILWAY_ENV_ID }}
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
           RAILWAY_PROJECT_NAME: ${{ secrets.RAILWAY_PROJECT_NAME }}
-        working-directory: ./backend
-
-
-
-
