@@ -59,13 +59,16 @@ jobs:
         run: RAILWAY_DEBUG=1 railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
         working-directory: ./backend
 
-          # Deploy to the appropriate environment in the same project
+      # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
         run: |
           unset RAILWAY_TOKEN
+          railway link -p $RAILWAY_PROJECT_NAME -e $RAILWAY_ENV_ID -s $RAILWAY_PROJECT_NAME
           railway domain || true
         env:
+          RAILWAY_ENV_ID: ${{ env.RAILWAY_ENV_ID }}
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          RAILWAY_PROJECT_NAME: ${{ secrets.RAILWAY_PROJECT_NAME }}
         working-directory: ./backend
 
 
