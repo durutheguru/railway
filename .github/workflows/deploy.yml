@@ -45,21 +45,10 @@ jobs:
             echo "RAILWAY_ENV_ID=${{ secrets.RAILWAY_STAGING_ENV_ID }}" >> $GITHUB_ENV
           fi
 
-      # # Deploy to the appropriate environment in the same project
-      # - name: Link Railway project
-      #   run: |
-      #     railway link -p $RAILWAY_PROJECT_NAME -e $RAILWAY_ENV_ID -s $RAILWAY_PROJECT_NAME
-      #   env:
-      #     RAILWAY_PROJECT_NAME: ${{ secrets.RAILWAY_PROJECT_NAME }}
-      #     RAILWAY_ENV_ID: ${{ env.RAILWAY_ENV_ID }}
-      #     RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-
-      # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
-        run: RAILWAY_DEBUG=1 railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
+        run: RAILWAY_DEBUG=1 railway up --environment=${{ env.RAILWAY_ENV_ID }}
         working-directory: ./backend
 
-      # Deploy to the appropriate environment in the same project
       - name: Deploy to Railway
         run: |
           unset RAILWAY_TOKEN
