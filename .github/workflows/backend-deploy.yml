@@ -5,6 +5,8 @@ on:
     branches:
       - staging
       - main
+    paths:
+      - 'backend/**'
 
 jobs:
   build-test:
@@ -63,7 +65,7 @@ jobs:
         working-directory: ./backend
 
 
-        #   backend-account-token="a0f7b020-1bac-4962-b053-ec41f64d43f0"
-        #   backend-staging-project-token="ea8282e4-9187-49aa-90ed-2a92c5289ea4"
+
+
 
 
