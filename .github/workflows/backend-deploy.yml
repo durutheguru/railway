@@ -32,7 +32,7 @@ jobs:
     container: ghcr.io/railwayapp/cli:latest
     env:
       SVC_ID: backend
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_TOKEN: ${{ github.ref == 'refs/heads/main' && secrets.RAILWAY_PROD_TOKEN || secrets.RAILWAY_STAGING_TOKEN }}
 
     steps:
       - name: Check out the repository
@@ -49,7 +49,7 @@ jobs:
           fi
 
       - name: Deploy to Railway
-        run: RAILWAY_DEBUG=1 railway up --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
+        run: railway up --verbose --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
         working-directory: ./backend
 
       # Deploy to the appropriate environment in the same project
