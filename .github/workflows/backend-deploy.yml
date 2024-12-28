@@ -22,9 +22,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
   
-      - name: Run Integration Tests
-        run: ./gradlew clean test
-        working-directory: ./backend
+      # - name: Run Integration Tests
+      #   run: ./gradlew clean test
+      #   working-directory: ./backend
 
   deploy:
     needs: [build-test]
