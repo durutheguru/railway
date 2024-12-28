@@ -1,3 +1,19 @@
 
 spring.application.name: backend
 
+spring:
+  datasource:
+    url: "jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:exampledb}"
+    username: "${PGUSER:exampleuser}"
+    password: "${PGPASSWORD:examplepass}"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
+spring.sql.init.mode: always
