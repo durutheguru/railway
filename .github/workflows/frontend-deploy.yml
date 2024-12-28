@@ -52,7 +52,7 @@ jobs:
 
       - name: Deploy to Railway
         working-directory: ./frontend
-        run: railway up --verbose --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }}
+        run: railway up --verbose --service=${{ env.SVC_ID }} --environment=${{ env.RAILWAY_ENV_ID }} || true
 
       - name: Activate Domain
         working-directory: ./frontend
